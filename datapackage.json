@@ -1,0 +1,84 @@
+{
+  "bytes": 610322,
+  "count_of_rows": 25698,
+  "hash": "c61688fdfaa5acd1a4c4c5ab799ef44e",
+  "profile": "data-package",
+  "resources": [
+    {
+      "dialect": {
+        "caseSensitiveHeader": false,
+        "delimiter": ",",
+        "doubleQuote": true,
+        "header": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "name": "cities",
+      "path": "world-cities.csv",
+      "profile": "tabular-data-resource",
+      "schema": {
+        "fields": [
+          {
+            "format": "default",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "geonameid",
+            "type": "integer"
+          },
+          {
+            "format": "default",
+            "name": "country_id",
+            "type": "integer"
+          }
+        ],
+        "missingValues": [
+          ""
+        ],
+        "primaryKey": [
+          "country_id"
+        ]
+      }
+    },
+    {
+      "dialect": {
+        "delimiter": ",",
+        "doubleQuote": true,
+        "lineTerminator": "\r\n",
+        "quoteChar": "\"",
+        "skipInitialSpace": false
+      },
+      "encoding": "utf-8",
+      "format": "csv",
+      "name": "cities_country_id",
+      "path": "cities_country_id.csv",
+      "profile": "data-resource",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "integer"
+          },
+          {
+            "format": "default",
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "format": "default",
+            "name": "subcountry",
+            "type": "string"
+          }
+        ],
+        "primaryKey": [
+          "id"
+        ]
+      }
+    }
+  ]
+}
