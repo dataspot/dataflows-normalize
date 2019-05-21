@@ -1,0 +1,25 @@
+dist: xenial
+sudo: required
+language: python
+python:
+- 3.7
+env:
+  global:
+  - LANG=en_US.UTF-8
+install:
+- sudo apt-get install libleveldb-dev libleveldb1v5
+- make install
+- pip install coveralls
+script:
+- make lint
+- make test
+after_success:
+- coveralls
+deploy:
+  provider: pypi
+  user: akariv
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+  password:
+    secure: oHQxVbVO72nO7MKEEotcOfBgTaJNskP7zcKqdnp8TbvJRh8akqv5NA3UTZbCqakSHsv9PCDhgoAPGWzR7Txr1oXRmqwKdMn+iyLRYop4v9Rhh4gnRd6oUze6ZT6VSejdHj/NBexH6f/ZxGjSEd98HiI24eOJgi7p5ctcg2TFbI7fTm7ddy9VLzAeW4A4Qr3k5VRtXKjVkSD964RJofyUxcTZLZJU4hDbSmCGzs8+w725YDlrr/mXp35QiZ7JoMfCbabLzFzEAUCqQN1nQw11dcPWMY1iij6kBujlfxBHNeX1hC4iOQfgEI0XUR3nJfgIMzMXTkIYSQq5CtzFUvPRUqWCeHr/WzMqeq09cVuSXHHdHOvTs9UnG9CHtP00rCt8EHpS2QYjm/xaiL/bT8SN5ROyLRHotDojOxZxMftMOBr4hEhUHGCTlusp0aKabvfI/Bfah55CSOYcGE6oIGpZsSJf4tfYkZg7KFUKB/oIrSjo4AmiH5B1c5g/U9lNy1zw8ByH5kyeOYW9twXypfxzzDZmaelqxXpF2bpTnmVh/BZCVA/Zc9X2fBxB8gYxYJ+tNlkQ3NhKl+L0RKNLb5c8EKJDLBSZLECoNIaFRgJJfCAQ3H/JtEKBso24lpk/UBh9vab98u10OkPmyROofsgqX3EmWUOqZVIrEN8SPigQRSw=

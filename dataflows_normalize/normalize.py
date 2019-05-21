@@ -171,5 +171,5 @@ def normalize_to_db(groups, db_table,
                 {'resource-name': '{}_{}'.format(resource_name, group.ref_field_name),
                  'mode': 'update'})
              for group in groups]
-        ))
+        ), engine=db_connection_str)
     )
