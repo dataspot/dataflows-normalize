@@ -13,6 +13,14 @@ class NormGroup():
         self.existing_rows = existing_rows
         self.db_table = db_table
 
+    def __str__(self):
+        return '{} -> {}.{} ({})'.format(
+            self.ref_field_name,
+            self.db_table,
+            self.index_field_name,
+            ', '.join(self.fields)
+        )
+
 
 class Indexer():
 
@@ -147,7 +155,8 @@ def normalize(groups, resource=None):
 
 def normalize_to_db(groups, db_table,
                     resource_name,
-                    db_connection_str='env://DATAFLOWS_DB_ENGINE'):
+                    db_connection_str='env://DATAFLOWS_DB_ENGINE',
+                    fact_table_mode='update'):
 
     for group in groups:
         group: NormGroup
@@ -166,7 +175,7 @@ def normalize_to_db(groups, db_table,
         dump_to_sql(dict(
             [(db_table,
                 {'resource-name': resource_name,
-                 'mode': 'update'})] +
+                 'mode': fact_table_mode})] +
             [(group.db_table,
                 {'resource-name': '{}_{}'.format(resource_name, group.ref_field_name),
                  'mode': 'update'})
