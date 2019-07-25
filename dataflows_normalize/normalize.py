@@ -164,7 +164,7 @@ def normalize_to_db(groups, db_table,
             group.db_table = '{}_{}'.format(db_table, group.ref_field_name)
         try:
             existing_rows = Flow(
-                load(db_connection_str, table=group.db_table)
+                load(db_connection_str, table=group.db_table, infer_strategy=load.INFER_PYTHON_TYPES, cast_strategy=load.CAST_DO_NOTHING)
             ).results()[0][0]
         except Exception:
             existing_rows = []
