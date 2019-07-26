@@ -1,3 +1,5 @@
+import logging
+
 from dataflows import Flow, load, dump_to_sql
 from dataflows.helpers import ResourceMatcher
 from dataflows.processors.join import KeyCalc
@@ -164,9 +166,14 @@ def normalize_to_db(groups, db_table,
             group.db_table = '{}_{}'.format(db_table, group.ref_field_name)
         try:
             existing_rows = Flow(
-                load(db_connection_str, table=group.db_table, infer_strategy=load.INFER_PYTHON_TYPES, cast_strategy=load.CAST_DO_NOTHING)
+                load(db_connection_str, table=group.db_table,
+                     infer_strategy=load.INFER_PYTHON_TYPES, cast_strategy=load.CAST_DO_NOTHING)
             ).results()[0][0]
+            if len(existing_rows) > 0:
+                logging.info('Loaded %d existing rows for group %r: %r...',
+                             len(existing_rows), group.db_table, existing_rows[0])
         except Exception:
+            logging.exception('Failed to load existing rows for group %r', group.db_table)
             existing_rows = []
         group.existing_rows = existing_rows
 
