@@ -33,12 +33,14 @@ class Indexer():
         self.max = 0
         self.min = 0
         if group.existing_rows:
+            logger.info('Loading existing rows to kv')
             for row in group.existing_rows:
                 key = self.key_calc(row)
                 self.kv.set(key, row)
                 self.keys.add(key)
                 self.max = max(self.max, row[group.index_field_name] + 1)
             self.min = self.max
+            logger.info('Loaded existing rows to kv, max=%d', self.max)
 
         self.resources = resources
         self.group = group
