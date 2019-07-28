@@ -1,9 +1,9 @@
-import logging
-
 from dataflows import Flow, load, dump_to_sql
 from dataflows.helpers import ResourceMatcher
 from dataflows.processors.join import KeyCalc
 from kvfile import KVFile
+
+from .log import logger
 
 
 class NormGroup():
@@ -144,11 +144,13 @@ class Indexer():
 
 def normalize(groups, resource=None):
 
+    logger.info('Creating indexers for %d groups', len(groups))
     indexers = [
         Indexer(resource, group)
         for group in groups
     ]
 
+    logger.info('Returning flow')
     return Flow(
         *(
             i.index()
@@ -166,6 +168,7 @@ def normalize_to_db(groups, db_table,
                     db_connection_str='env://DATAFLOWS_DB_ENGINE',
                     fact_table_mode='update'):
 
+    logger.info('normalize_to_db - preparing groups')
     for group in groups:
         group: NormGroup
         if group.db_table is None:
@@ -176,13 +179,14 @@ def normalize_to_db(groups, db_table,
                      infer_strategy=load.INFER_PYTHON_TYPES, cast_strategy=load.CAST_DO_NOTHING)
             ).results()[0][0]
             if len(existing_rows) > 0:
-                logging.info('Loaded %d existing rows for group %r: %r...',
-                             len(existing_rows), group.db_table, existing_rows[0])
+                logger.info('Loaded %d existing rows for group %r: %r...',
+                            len(existing_rows), group.db_table, existing_rows[0])
         except Exception:
-            logging.exception('Failed to load existing rows for group %r', group.db_table)
+            logger.exception('Failed to load existing rows for group %r', group.db_table)
             existing_rows = []
         group.existing_rows = existing_rows
 
+    logger.info('normalize_to_db - returning Flow')
     return Flow(
         normalize(groups, resource=resource_name),
         dump_to_sql(dict(
