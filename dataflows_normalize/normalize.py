@@ -31,12 +31,14 @@ class Indexer():
         self.keys = set()
         self.kv = KVFile()
         self.max = 0
+        self.min = 0
         if group.existing_rows:
             for row in group.existing_rows:
                 key = self.key_calc(row)
                 self.kv.set(key, row)
                 self.keys.add(key)
                 self.max = max(self.max, row[group.index_field_name] + 1)
+            self.min = self.max
 
         self.resources = resources
         self.group = group
@@ -131,7 +133,11 @@ class Indexer():
             )
             yield package.pkg
             yield from package
-            yield (row for _, row in self.kv.items())
+            yield (
+                row
+                for _, row in self.kv.items()
+                if row[self.group.index_field_name] >= self.min
+            )
 
         return func
 
@@ -185,7 +191,7 @@ def normalize_to_db(groups, db_table,
                  'mode': fact_table_mode})] +
             [(group.db_table,
                 {'resource-name': '{}_{}'.format(resource_name, group.ref_field_name),
-                 'mode': 'update'})
+                 'mode': 'append'})
              for group in groups]
         ), engine=db_connection_str)
     )
