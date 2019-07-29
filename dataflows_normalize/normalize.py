@@ -1,7 +1,7 @@
 from dataflows import Flow, load, dump_to_sql
 from dataflows.helpers import ResourceMatcher
 from dataflows.processors.join import KeyCalc
-from kvfile import KVFile
+from kvfile import CachedKVFile
 
 from .log import logger
 
@@ -29,7 +29,7 @@ class Indexer():
     def __init__(self, resources, group: NormGroup):
         self.key_calc = KeyCalc(group.fields)
         self.keys = set()
-        self.kv = KVFile()
+        self.kv = CachedKVFile(10240)
         self.max = 0
         self.min = 0
         if group.existing_rows:

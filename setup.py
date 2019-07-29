@@ -22,6 +22,7 @@ PACKAGE = 'dataflows_normalize'
 NAME = PACKAGE.replace('_', '-')
 INSTALL_REQUIRES = [
     'dataflows>=0.0.51',
+    'kvfile>=0.0.7',
     'psycopg2-binary'
 ]
 LINT_REQUIRES = [
