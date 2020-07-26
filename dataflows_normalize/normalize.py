@@ -35,7 +35,7 @@ class Indexer():
         if group.existing_rows:
             logger.info('Loading existing rows to kv')
             for row in group.existing_rows:
-                key = self.key_calc(row)
+                key = self.key_calc(row, 0)
                 self.kv.set(key, row)
                 self.keys.add(key)
                 self.max = max(self.max, row[group.index_field_name] + 1)
@@ -52,9 +52,9 @@ class Indexer():
     def index(self):
 
         def process(resource):
-            for row_number, row in enumerate(resource):
+            for row in resource:
                 index = None
-                key = self.key_calc(row, row_number)
+                key = self.key_calc(row, 0)
                 if key not in self.keys:
                     subrow = dict(
                         (k, row.get(k))
