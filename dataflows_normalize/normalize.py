@@ -80,7 +80,7 @@ class Indexer():
             matcher = ResourceMatcher(self.resources, package.pkg)
             resource = list(
                 filter(lambda r: matcher.match(r['name']),
-                    descriptor['resources'])
+                       descriptor['resources'])
             )
             assert len(resource) == 1, 'Failed to find resource single %s in package' % self.resources
             resource = resource[0]
@@ -183,8 +183,8 @@ def normalize_to_db(groups, db_table,
             if len(existing_rows) > 0:
                 logger.info('Loaded %d existing rows for group %r: %r...',
                             len(existing_rows), group.db_table, existing_rows[0])
-        except Exception:
-            logger.exception('Failed to load existing rows for group %r', group.db_table)
+        except Exception as e:
+            logger.error('Failed to load existing rows for group %r: %s', group.db_table, e)
             existing_rows = []
         group.existing_rows = existing_rows
 
