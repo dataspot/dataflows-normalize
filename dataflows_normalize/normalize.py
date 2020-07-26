@@ -52,9 +52,9 @@ class Indexer():
     def index(self):
 
         def process(resource):
-            for row in resource:
+            for row_number, row in enumerate(resource):
                 index = None
-                key = self.key_calc(row)
+                key = self.key_calc(row, row_number)
                 if key not in self.keys:
                     subrow = dict(
                         (k, row.get(k))
